@@ -1,0 +1,53 @@
+Alice   ,Hello               ,0
+Bob     ,Hi ! How are you?   ,5
+Charlie ,Nice weather today! ,2
+David   ,Just finished work  ,8
+Eve     ,Learning to code    ,3
+Frank   ,Coffee time!        ,1
+Alice   ,Great day ahead     ,6
+Bob     ,Movie night         ,4
+Grace   ,New project started ,7
+Henry   ,Weekend plans       ,2
+Ivy     ,Tech conference     ,5
+Jack    ,Coding session      ,9
+Alice   ,Meeting prep        ,3
+Bob     ,Lunch break         ,6
+Charlie ,Bug fixed!          ,8
+David   ,Team update         ,4
+Eve     ,Project milestone   ,7
+Frank   ,Morning routine     ,2
+Grace   ,Code review         ,5
+Henry   ,Database update     ,9
+Ivy     ,API testing         ,3
+Jack    ,DevOps tasks        ,6
+Alice   ,Git commit          ,4
+Bob     ,Deploy success      ,8
+Charlie ,Code merge          ,5
+David   ,Sprint planning     ,7
+Eve     ,Unit tests          ,2
+Frank   ,Documentation       ,6
+Grace   ,Security patch      ,9
+Henry   ,Performance test    ,3
+Ivy     ,UI fixes            ,4
+Jack    ,Backend work        ,8
+Alice   ,Frontend update     ,5
+Bob     ,Mobile testing      ,7
+Charlie ,Cloud deploy        ,2
+David   ,Data backup         ,6
+Eve     ,Code cleanup        ,9
+Frank   ,Bug hunting         ,3
+Grace   ,Feature launch      ,4
+Henry   ,System check        ,8
+Ivy     ,Network test        ,5
+Jack    ,Debug session       ,7
+Alice   ,Code review         ,2
+Bob     ,Testing phase       ,6
+Charlie ,Release prep        ,9
+David   ,Server update       ,3
+Eve     ,Cache clear         ,4
+Frank   ,Log review          ,8
+Grace   ,Error fixing        ,5
+Henry   ,API update          ,7
+Ivy     ,Final tests         ,2
+Jack    ,Version update      ,6
+

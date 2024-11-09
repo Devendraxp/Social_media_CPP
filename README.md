@@ -5,10 +5,11 @@ Here is a draft for your README.md file:
 A C++ based social media platform. This project aims to build a social network application using C++ to manage user profiles, posts, and interactions.
 
 ## Features
-- User Registration and Authentication
-- Profile Management
-- Post Creation and Management
-- Friend Requests and Messaging
+- login or signup
+- trending posts or the following feed
+- create a post
+- search for another user and see their profile
+- A CLI Application inspired from **X**
 
 ## Installation
 
@@ -20,16 +21,16 @@ A C++ based social media platform. This project aims to build a social network a
    ```
    cd Social_media_CPP
    ```
-3. Build the project:
+3. Compile the project:
    ```
-   make
+   g++ index.cpp -o index
    ```
 
 ## Usage
 
 Run the application:
 ```
-./social_media_app
+./index
 ```
 Follow the on-screen instructions to create an account and start using the platform.
 

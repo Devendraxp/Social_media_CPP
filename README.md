@@ -1,6 +1,4 @@
-Here is a draft for your README.md file:
-
-# Social_media_CPP
+# Social Media app in CPP
 
 A C++ based social media platform. This project aims to build a social network application using C++ to manage user profiles, posts, and interactions.
 

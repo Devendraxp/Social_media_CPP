@@ -35,6 +35,7 @@ class User
 {
 private:
     string username;
+    string password;
     vector<User *> following;
     vector<User *> followers;
     vector<Post *> posts;
@@ -44,7 +45,6 @@ public:
 
     string getUsername() const { return username; }
 
-    // Follow another user and add this user to the followed user's followers list
     void follow(User *user)
     {
         if (user && user != this && !isFollowing(user))
@@ -90,8 +90,8 @@ public:
         posts.push_back(post);
     }
 
-    vector<User *> getFollowing() const { return following; }
-    vector<User *> getFollowers() const { return followers; }
+    vector<User *>& getFollowing() { return following; }
+    vector<User *>& getFollowers() { return followers; }
 
     vector<Post *> getContents() const { return posts; }
 
@@ -431,7 +431,7 @@ public:
 };
 
 int main()
-{
+{   
     SocialMedia app;
 
     int choice;
@@ -448,8 +448,11 @@ int main()
     if (choice == 1) {
         currentUser = app.findUser(username);
         if (currentUser) {
-            cout << "\033[1;32m------ Login successful!------\033[0m" << endl;
+            cout << "\033[1;32m------ Login successful!------\033[0m" << endl<<endl;
             cout << "\033[1;34mWelcome \033[0m" << "\033[1;36m" << currentUser->getUsername() << "\033[0m" << endl << endl;
+            cout << "\033[1;35mPress Enter to continue...\033[0m";
+            cin.ignore();
+            cin.get();
         } else {
             cout << "User not found. Please sign up." << endl;
             return 0;
@@ -458,11 +461,23 @@ int main()
         app.addUser(username);
         currentUser = app.findUser(username);
         cout << "Signup successful!" << endl;
+        cout << "\033[1;35mPress Enter to continue...\033[0m";
+        cin.ignore();
+        cin.get();
     } else {
         cout << "Invalid choice." << endl;
         return 0;
     }
     while (true) {
+        system("clear");
+        cout << "\033[1;36m1. Feed\033[0m" << endl;
+        cout << "\033[1;36m2. Search User\033[0m" << endl;
+        cout << "\033[1;36m3. Display Profile\033[0m" << endl;
+        cout << "\033[1;36m4. Create Post\033[0m" << endl;  
+        cout << "\033[1;36m5. Exit\033[0m" << endl;
+        cout << "\033[1;33mEnter your choice: \033[0m";
+        cin >> choice;
+
         cout << "\033[1;36m1. Feed\033[0m" << endl;
         cout << "\033[1;36m2. Search User\033[0m" << endl;
         cout << "\033[1;36m3. Display Profile\033[0m" << endl;
@@ -494,21 +509,142 @@ int main()
             string username;
             cout << "\033[1;33mEnter username to search: \033[0m";
             cin >> username;
-            currentUser = app.findUser(username);
-            if (currentUser) {
-                currentUser->displayProfile();
+            User* searchedUser = app.findUser(username);
+            if (searchedUser) {
+                bool staying = true;
+                while (staying) {
+                    system("clear");
+                    searchedUser->displayProfile();
+                    cout << "\033[1;36m1. Follow\033[0m" << endl;
+                    cout << "\033[1;36m2. See Followers List\033[0m" << endl;
+                    cout << "\033[1;36m3. See Following List\033[0m" << endl;
+                    cout << "\033[1;36m4. See All Posts\033[0m" << endl;
+                    cout << "\033[1;36m5. Back to Main Menu\033[0m" << endl;
+                    cout << "\033[1;33mEnter your choice: \033[0m";
+                    int userChoice;
+                    cin >> userChoice;
+
+                    switch (userChoice) {
+                        case 1:
+                            if (currentUser->isFollowing(searchedUser)) {
+                                cout << "\033[1;36mYou are already following : " << searchedUser <<"\033[0m" << endl;
+                                cout << "\033[1;33mEnter 1 to remove from following or any other key to cancel: \033[0m";
+                                int choice;
+                                cin >> choice;
+                                if (choice == 1) {
+                                    auto& following = const_cast<vector<User*>&>(currentUser->getFollowing());
+                                    auto& followers = const_cast<vector<User*>&>(searchedUser->getFollowers());
+                                    following.erase(remove(following.begin(), following.end(), searchedUser), following.end());
+                                    followers.erase(remove(followers.begin(), followers.end(), currentUser), followers.end());
+                                    app.saveUsersToFile();
+                                    cout << "\033[1;32mYou are no longer following " << searchedUser->getUsername() << "!\033[0m" << endl;
+                                }
+                            } else {
+                                currentUser->follow(searchedUser);
+                                app.saveUsersToFile();
+                                cout << "\033[1;32mYou are now following " << searchedUser->getUsername() << "!\033[0m" << endl;
+                            }
+                            app.saveUsersToFile();
+                            cout << "\033[1;35mPress Enter to continue...\033[0m";
+                            cin.ignore();
+                            cin.get();
+                            break;
+                        case 2:
+                            searchedUser->displayFollowers();
+                            cout << "\033[1;35mPress Enter to continue...\033[0m";
+                            cin.ignore();
+                            cin.get();
+                            break;
+                        case 3:
+                            searchedUser->displayFollowing();
+                            cout << "\033[1;35mPress Enter to continue...\033[0m";
+                            cin.ignore();
+                            cin.get();
+                            break;
+                        case 4:
+                            searchedUser->displayContents();
+                            cout << "\033[1;35mPress Enter to continue...\033[0m";
+                            cin.ignore();
+                            cin.get();
+                            break;
+                        case 5:
+                            staying = false;
+                            break;
+                        default:
+                            cout << "\033[1;31mInvalid choice. Please try again.\033[0m" << endl;
+                            cout << "\033[1;35mPress Enter to continue...\033[0m";
+                            cin.ignore();
+                            cin.get();
+                    }
+                }
             } else {
                 cout << "\033[1;31mUser not found.\033[0m" << endl;
+                cout << "\033[1;35mPress Enter to continue...\033[0m";
+                cin.ignore();
+                cin.get();
             }
         } else if (choice == 3) {
-            cout << endl << "\033[1;34m--------- User Profile ----------\033[0m" << endl;
-            currentUser->displayProfile();
-            cout << endl << endl;
-        } else if (choice == 4) {
-            cout << "\033[1;31m------ Exiting... -------\033[0m" << endl;
+            bool staying = true;
+            while (staying) {
+                system("clear");
+                cout << endl << "\033[1;34m--------- User Profile ----------\033[0m" << endl;
+                currentUser->displayProfile();
+                cout << "\033[1;36m1. See Followers List\033[0m" << endl;
+                cout << "\033[1;36m2. See Following List\033[0m" << endl;
+                cout << "\033[1;36m3. See All Posts\033[0m" << endl;
+                cout << "\033[1;36m4. Back to Main Menu\033[0m" << endl;
+                cout << "\033[1;33mEnter your choice: \033[0m";
+                int userChoice;
+                cin >> userChoice;
+
+                switch (userChoice) {
+                    case 1:
+                        currentUser->displayFollowers();
+                        cout << "\033[1;35mPress Enter to continue...\033[0m";
+                        cin.ignore();
+                        cin.get();
+                        break;
+                    case 2:
+                        currentUser->displayFollowing();
+                        cout << "\033[1;35mPress Enter to continue...\033[0m";
+                        cin.ignore();
+                        cin.get();
+                        break;
+                    case 3:
+                        currentUser->displayContents();
+                        cout << "\033[1;35mPress Enter to continue...\033[0m";
+                        cin.ignore();
+                        cin.get();
+                        break;
+                    case 4:
+                        staying = false;
+                        break;
+                    default:
+                        cout << "\033[1;31mInvalid choice. Please try again.\033[0m" << endl;
+                        cout << "\033[1;35mPress Enter to continue...\033[0m";
+                        cin.ignore();
+                        cin.get();
+                }
+            }
+        }
+         else if (choice == 4) {
+            string content;
+            cout << "\033[1;33mEnter your post content: \033[0m";
+            cin.ignore();
+            getline(cin, content);
+            app.createPost(currentUser, content);
+            cout << "\033[1;32mPost created successfully!\033[0m" << endl;
+            cout << "\033[1;35mPress Enter to continue...\033[0m";
+            cin.get();
+        }
+         else if (choice == 5) {
+            cout << endl<< endl<<"\033[1;31m------ Exiting... -------\033[0m" << endl;
             break;
         } else {
             cout << "\033[1;31mInvalid choice. Please try again.\033[0m" << endl;
+            cout << "\033[1;35mPress Enter to continue...\033[0m";
+            cin.ignore();
+            cin.get();
         }
     }
 

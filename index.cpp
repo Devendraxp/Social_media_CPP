@@ -7,7 +7,6 @@
 using namespace std;
 
 class User;
-class Post;
 class Comment;
 
 // Base class for content (Post, Comment)
@@ -30,6 +29,8 @@ public:
 
     virtual void saveToFile(ofstream &file) const = 0;
 };
+
+class Post;
 
 class User
 {
@@ -119,11 +120,15 @@ public:
     }
 
     void displayContents() const {
-        cout << "\033[1;36mContents: \033[0m" << endl;
-        for (auto post : posts) {
-            // post->display();
+        if (posts.empty()) {
+            cout << "\033[1;31mNo posts to display!\033[0m" << endl;
+        } else {
+            cout << "\033[1;36mAll posts: \033[0m" << endl;
+            for (auto post : posts) {
+                post->display();
+            }
+            cout << endl;
         }
-        cout << endl;
     }
     // Save the user to a CSV file, including the following and followers list
     void saveToFile(ofstream &file) const
@@ -164,7 +169,7 @@ public:
     Post(string txt, int like, User *auth) : Content(txt, like), author(auth) {}
 
     // Polymorphic method to display post content
-    void display() const override
+    void display() const
     {
         cout << "\033[1;34m" << author->getUsername() << "'s Post: \033[0m" << "\033[1;37m" << text << "\033[0m" << endl << "\033[1;32m" << likes << " likes\033[0m" << endl;
     }
@@ -374,9 +379,12 @@ public:
         
         if (followedPosts.empty()) {
             cout << "\033[1;31mNo posts from followed users!\033[0m" << endl;
+            cout << "\033[1;35mPress Enter to continue...\033[0m";
+            cin.ignore();
+            cin.get();
             return;
         }
-
+    
         while (true) {
             displaySinglePost(followedPosts[currentIndex]);
             
@@ -405,6 +413,9 @@ public:
                     break;
                 case 4:
                     return;
+                default:
+                    cout << "\033[1;31mInvalid choice. Please try again.\033[0m" << endl;
+                    break;
             }
         }
     }
@@ -475,13 +486,6 @@ int main()
         cout << "\033[1;36m3. Display Profile\033[0m" << endl;
         cout << "\033[1;36m4. Create Post\033[0m" << endl;  
         cout << "\033[1;36m5. Exit\033[0m" << endl;
-        cout << "\033[1;33mEnter your choice: \033[0m";
-        cin >> choice;
-
-        cout << "\033[1;36m1. Feed\033[0m" << endl;
-        cout << "\033[1;36m2. Search User\033[0m" << endl;
-        cout << "\033[1;36m3. Display Profile\033[0m" << endl;
-        cout << "\033[1;36m4. Exit\033[0m" << endl;
         cout << "\033[1;33mEnter your choice: \033[0m";
         cin >> choice;
         if (choice == 1) {

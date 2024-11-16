@@ -7,7 +7,6 @@
 using namespace std;
 
 class User;
-class Comment;
 
 // Base class for content (Post, Comment)
 class Content
@@ -30,7 +29,24 @@ public:
     virtual void saveToFile(ofstream &file) const = 0;
 };
 
-class Post;
+
+class Post : public Content
+{
+private:
+    User *author;
+
+public:
+    Post(string txt,User *auth) : Content(txt), author(auth) {}
+    Post(string txt, int like, User *auth) : Content(txt, like), author(auth) {}
+
+    void display()const;
+
+    void saveToFile(ofstream &file) const;
+
+    static vector<Post *> loadFromFile(vector<User *> &users);
+
+};
+
 
 class User
 {
@@ -158,32 +174,15 @@ public:
     static vector<User *>loadFromFile();
 };
 
-
-class Post : public Content
-{
-private:
-    User *author;
-
-public:
-    Post(string txt,User *auth) : Content(txt), author(auth) {}
-    Post(string txt, int like, User *auth) : Content(txt, like), author(auth) {}
-
-    // Polymorphic method to display post content
-    void display() const
+void Post :: display() const
     {
         cout << "\033[1;34m" << author->getUsername() << "'s Post: \033[0m" << "\033[1;37m" << text << "\033[0m" << endl << "\033[1;32m" << likes << " likes\033[0m" << endl;
     }
 
-    void saveToFile(ofstream &file) const override
+void Post :: saveToFile(ofstream &file) const
     {
         file << author->getUsername() << "," << text << "," << likes << endl;
     }
-
-    static vector<Post *> loadFromFile(vector<User *> &users);
-
-};
-
-    // Load users from a CSV file, handling following and followers relationships
     vector<User *> User::loadFromFile()
     {
         vector<User *> users;
